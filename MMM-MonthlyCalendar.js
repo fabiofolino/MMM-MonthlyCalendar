@@ -68,6 +68,7 @@ Module.register("MMM-MonthlyCalendar", {
     wrapTitles: false,
     hideCalendars: [],
     luminanceThreshold: 110,
+    titleReplace:  {}
   },
 
   start: function() {
@@ -258,7 +259,18 @@ Module.register("MMM-MonthlyCalendar", {
             }
           }
 
-          div.appendChild(el("span", { "innerText": e.title }));
+          //code for titleReplace
+          for (let needle in self.config.titleReplace) {
+            const replacement = self.config.titleReplace[needle];
+            const regParts = needle.match(/^\/(.+)\/([gim]*)$/);
+            if (regParts) {
+              // the parsed pattern is a regexp.
+              needle = new RegExp(regParts[1], regParts[2]);
+            }
+            e.title = e.title.replaceAll(needle, replacement);
+            }
+          
+            div.appendChild(el("span", { "innerText": e.title }));
 
           if (e.color) {
             var c = e.color;
